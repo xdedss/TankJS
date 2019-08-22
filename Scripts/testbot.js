@@ -1,6 +1,8 @@
 turn = true;
 
 function update(){
+  info.me.health = 1000;//Ã»ÓÃ
+  
   log("I'm at " + info.me.x + "," + info.me.z);
   if(info.tanks.length >= 1){
     var ids = "";

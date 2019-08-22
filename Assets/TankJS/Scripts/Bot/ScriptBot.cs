@@ -5,9 +5,11 @@ using System;
 using UnityEngine;
 using NiL.JS.Core;
 using NiL.JS.Extensions;
+using System.Runtime.Serialization.Json;
 
 public class ScriptBot : IBot
 {
+
     public string scriptPath;
     public string name;
     public ThreadContext threadContext;
@@ -42,7 +44,8 @@ public class ScriptBot : IBot
     {
         try
         {
-            threadContext.ctx.GetVariable("info").Assign(info);
+            //threadContext.ctx.GetVariable("info").Assign(info);
+            threadContext.ctx.Eval("info=" + ObjectToJson(info));
             var res = threadContext.TimedEval("update()", 1000);
             var action = res.As<int>();
             Debug.Log(name + " -> " + action);
@@ -63,5 +66,17 @@ public class ScriptBot : IBot
     private void DebugMessage(string msg)
     {
         Debug.Log(name + " : " + msg);
+    }
+
+    //https://www.cnblogs.com/JiYF/p/8628942.html
+    private static string ObjectToJson(object obj)
+    {
+        DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+        MemoryStream stream = new MemoryStream();
+        serializer.WriteObject(stream, obj);
+        byte[] dataBytes = new byte[stream.Length];
+        stream.Position = 0;
+        stream.Read(dataBytes, 0, (int)stream.Length);
+        return System.Text.Encoding.UTF8.GetString(dataBytes);
     }
 }

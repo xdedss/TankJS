@@ -1,3 +1,5 @@
+//碰到墙随机转向
+//碰到敌人时射击
 
 var directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 var actions = [[0, 0], [1, 0], [-1, 0], [0, -1], [0, 1], [0, 0], [2, 0]];
@@ -51,9 +53,8 @@ function sampleMap(pos){//2
 }
 
 function sampleTank(pos){//2
-  log("search in tanks " + info.tanks.length);
+  //log("search in tanks " + info.tanks.length);
   for(var i = 0; i < info.tanks.length; i++){
-    log("tank at " + info.tanks[i].x + "," + info.tanks[i].z + " we need " + pos[0] + "," + pos[1]);
     if(info.tanks[i].x == pos[0] && info.tanks[i].z == pos[1]){
       return info.tanks[i];
     }
