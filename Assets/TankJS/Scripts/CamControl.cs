@@ -46,7 +46,8 @@ public class CamControl : MonoBehaviour
     void FindAnchor()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out RaycastHit hit))
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
         {
             anchorPoint = hit.point;
         }

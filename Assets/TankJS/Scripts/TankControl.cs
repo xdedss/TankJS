@@ -230,7 +230,8 @@ public class TankControl : MonoBehaviour
         var start = transform.position + transform.forward * 0.48f + transform.up * 0.5f;
         var dir = transform.forward;
         Ray ray = new Ray(start, dir);
-        if (Physics.Raycast(ray, out RaycastHit hit, 40, 3 << 9))
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 40, 3 << 9))
         {
             if (hit.transform.gameObject.layer == 10)
             {
