@@ -11,14 +11,18 @@ public class ScriptBot : IBot
 {
 
     public string scriptPath;
-    public string name;
     public ThreadContext threadContext;
+
+    public string Name { get => tankName + "-" + jsName; set { tankName = value; } }
+    string jsName;
+    string tankName;
+    string logFileName = "";
 
     public ScriptBot(string scriptPath)
     {
         this.scriptPath = scriptPath;
         var sp = scriptPath.Split('\\');
-        name = sp[sp.Length - 1];
+        jsName = sp[sp.Length - 1];
         threadContext = new ThreadContext(scriptPath);
         threadContext.ctx.DefineConstructor(typeof(Vector2));
         //threadContext.ctx.DefineConstructor(typeof(TankInformation));
@@ -48,7 +52,7 @@ public class ScriptBot : IBot
             threadContext.ctx.Eval("info=" + ObjectToJson(info));
             var res = threadContext.TimedEval("update()", 1000);
             var action = res.As<int>();
-            Debug.Log(name + " -> " + action);
+            Debug.Log(Name + " -> " + action);
             return action;
         }
         catch (Exception ex)
@@ -61,11 +65,23 @@ public class ScriptBot : IBot
     private void HandleJSError(Exception ex)
     {
         Debug.LogError(ex);
+        LogToFile("[ERROR]" + ex.Message);
     }
 
     private void DebugMessage(string msg)
     {
-        Debug.Log(name + " : " + msg);
+        Debug.Log(Name + " : " + msg);
+        LogToFile(msg);
+    }
+
+    private void LogToFile(string msg)
+    {
+        if (logFileName == "") logFileName = string.Format("{3}{0}_{1}_{2}.log", jsName, DateTime.Now.ToString("HHmmss"), tankName, Configurations.BotFolder);
+        
+        var sw = File.AppendText(logFileName);
+        sw.WriteLine(DateTime.Now.ToString("[HH:mm:ss.fff]") + msg);
+        sw.Flush();
+        sw.Close();
     }
 
     //https://www.cnblogs.com/JiYF/p/8628942.html

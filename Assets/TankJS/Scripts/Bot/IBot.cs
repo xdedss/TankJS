@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 public interface IBot
 {
+    string Name { get; set; }
     int RequestAction(GameInformation info);
 }

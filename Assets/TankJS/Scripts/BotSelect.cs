@@ -44,13 +44,6 @@ public class BotSelect : MonoBehaviour
     [Space]
     public string tankName;
 
-    private string BotFolder
-    {
-        get
-        {
-            return System.Environment.CurrentDirectory + @"\Scripts\";
-        }
-    }
 
     public void OnNameInputEdited()
     {
@@ -90,7 +83,7 @@ public class BotSelect : MonoBehaviour
         switch (dropdown.value)
         {
             case 0:
-                return new ScriptBot(BotFolder + fileNameInput.text + ".js");
+                return new ScriptBot(Configurations.BotFolder + fileNameInput.text + ".js");
             case 1:
                 return new InteractiveBot((InteractiveBot.KeySet)keySetDropdown.value);
         }

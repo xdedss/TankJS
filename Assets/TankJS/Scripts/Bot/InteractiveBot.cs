@@ -34,6 +34,9 @@ class InteractiveBot : IBot
     static KeyCode[] keysIJKL = new KeyCode[] { KeyCode.Space, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L, KeyCode.U, KeyCode.Alpha8 };
     KeyCode[] keys;
 
+    public string Name { get => tankName + "-InteractiveBot-" + keys; set { tankName = value; } }
+    string tankName;
+
     public int RequestAction(GameInformation info)
     {
         for(int i = 1; i < keys.Length; i++)

@@ -34,6 +34,8 @@ public class GameControl : MonoBehaviour
 
     private static Vector2[] rot2f = new Vector2[] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) };
 
+
+
     private void Awake()
     {
         instance = this;
@@ -354,6 +356,7 @@ public class GameControl : MonoBehaviour
             var id = currentId++;
             if (name == "") name = "Tank " + id;
             tank.gameObject.name = name;
+            bot.Name = name;
             tank.transform.position = new Vector3(x, 0, z);
             tank.transform.eulerAngles = new Vector3(0, 90 * rotation, 0);
             var tankControl = tank.GetComponent<TankControl>();
