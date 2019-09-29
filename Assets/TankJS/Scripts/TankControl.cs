@@ -16,11 +16,6 @@ public class TankControl : MonoBehaviour
 
     
     int radarTime = 0;
-    const int radarLength = 5;
-    const int defaultAttack = 10;
-    const int buffAttack = 20;
-    const int buffHealth = 10;
-    const int distanceFac = 2;
 
     void Start()
     {
@@ -46,17 +41,17 @@ public class TankControl : MonoBehaviour
 
     public void BuffHealth()
     {
-        tankInformation.health += buffHealth;
+        tankInformation.health += Configurations.BuffHealth;
     }
 
     public void BuffAttack()
     {
-        tankInformation.attack = buffAttack;
+        tankInformation.attack = Configurations.BuffAttack;
     }
 
     public void BuffRadar()
     {
-        radarTime = radarLength;
+        radarTime = Configurations.RadarDuration;
     }
 
     public void Init()
@@ -236,7 +231,7 @@ public class TankControl : MonoBehaviour
             if (hit.transform.gameObject.layer == 10)
             {
                 var anotherTank = hit.transform.parent.GetComponent<TankControl>();
-                int damage = tankInformation.attack - Mathf.FloorToInt(hit.distance) * distanceFac;
+                int damage = tankInformation.attack - Mathf.FloorToInt(Mathf.FloorToInt(hit.distance) * Configurations.DistanceFac);
                 if (damage > 0)
                 {
                     anotherTank.TakeDamage(damage);
@@ -249,7 +244,7 @@ public class TankControl : MonoBehaviour
             modelControl.Fire(40);
         }
 
-        tankInformation.attack = defaultAttack;
+        tankInformation.attack = Configurations.DefaultAttack;
     }
     private void MoveForward2()
     {

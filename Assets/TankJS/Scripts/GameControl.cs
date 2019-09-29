@@ -8,8 +8,8 @@ public class GameControl : MonoBehaviour
 
     public float RoundInterval { get { return tanks.Count == 0 ? totalInterval : totalInterval / tanks.Count; } }
     public float totalInterval = 1f;//TODO: UI
-    public int itemInterval = 5;
-    public int itemMaxCount = 5;
+    //public int itemInterval = 5;
+    //public int itemMaxCount = 5;
     [Space]
     public GameObject tankPrefab;
     public GameObject itemPrefab;
@@ -63,7 +63,9 @@ public class GameControl : MonoBehaviour
 
         Stop();
 
-        SetupMap(12, 24);//TODO: UI
+        Configurations.Reload();
+
+        SetupMap(Configurations.MapSizeX, Configurations.MapSizeZ);//TODO: UI//no, don't do ui
         
         foreach (var botSelect in BotSelect.instances)
         {
@@ -114,8 +116,8 @@ public class GameControl : MonoBehaviour
         {
             if(itemIntervalCount == 0)
             {
-                itemIntervalCount = itemInterval;
-                if(items.Count < itemMaxCount)
+                itemIntervalCount = Configurations.ItemInterval;
+                if(items.Count < Configurations.ItemMaxCount)
                 {
                     SpawnItem(Mathf.FloorToInt(Random.value * xWidth), Mathf.FloorToInt(Random.value * zWidth), Mathf.FloorToInt(Random.value * 3) + 1);
                 }
@@ -148,7 +150,7 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if(angle > 60)
+            if(angle > Configurations.FieldOfView / 2)
             {
                 return false;
             }
