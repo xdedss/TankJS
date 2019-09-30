@@ -50,7 +50,7 @@ public class ScriptBot : IBot
         {
             //threadContext.ctx.GetVariable("info").Assign(info);
             threadContext.ctx.Eval("info=" + ObjectToJson(info));
-            var res = threadContext.TimedEval("update()", 1000);
+            var res = threadContext.TimedEval("update()", Configurations.ScriptTimeout);
             var action = res.As<int>();
             Debug.Log(Name + " -> " + action);
             return action;

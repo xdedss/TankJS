@@ -144,7 +144,7 @@ public class GameControl : MonoBehaviour
         var dist = dir.magnitude;
         var angle = Vector2.Angle(front, new Vector2(dir.x, dir.z));
         //Debug.LogWarning(angle);
-        if(dist < 2.1f)
+        if(dist < Configurations.VisibleRange)
         {
             return true;
         }

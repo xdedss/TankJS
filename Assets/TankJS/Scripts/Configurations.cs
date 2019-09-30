@@ -39,6 +39,7 @@ class Configurations
     }
 
     public static float FieldOfView { get { return GetFloat("FIELD_OF_VIEW", 180); } }
+    public static float VisibleRange { get { return GetFloat("VISIBLE_RANGE", 2.1f); } }
     public static int RadarDuration { get { return GetInt("RADAR_DURATION", 5); } }
     public static int DefaultAttack { get { return GetInt("DEFAULT_ATTACK", 10); } }
     public static int BuffAttack { get { return GetInt("BUFF_ATTACK", 20); } }
@@ -49,6 +50,7 @@ class Configurations
     public static int ItemMaxCount { get { return GetInt("ITEM_MAX_COUNT", 5); } }
     public static int MapSizeX { get { return GetInt("MAP_SIZE_X", 12); } }
     public static int MapSizeZ { get { return GetInt("MAP_SIZE_Z", 24); } }
+    public static int ScriptTimeout { get { return GetInt("SCRIPT_TIMEOUT", 1000); } }
 
 
 
