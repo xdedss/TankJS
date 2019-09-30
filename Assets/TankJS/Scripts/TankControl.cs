@@ -57,8 +57,8 @@ public class TankControl : MonoBehaviour
     public void Init()
     {
         tankInformation = new TankInformation();
-        tankInformation.attack = 10;
-        tankInformation.health = 100;
+        tankInformation.attack = Configurations.DefaultAttack;
+        tankInformation.health = Configurations.DefaultHealth;
         UpdatePositionInfo();
         visibleInfo = new GameInformation();
         visibleInfo.mapData = GameControl.instance.mapData;

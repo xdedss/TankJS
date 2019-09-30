@@ -39,10 +39,10 @@ class Configurations
     }
 
     public static float FieldOfView { get { return GetFloat("FIELD_OF_VIEW", 180); } }
-
     public static int RadarDuration { get { return GetInt("RADAR_DURATION", 5); } }
     public static int DefaultAttack { get { return GetInt("DEFAULT_ATTACK", 10); } }
     public static int BuffAttack { get { return GetInt("BUFF_ATTACK", 20); } }
+    public static int DefaultHealth { get { return GetInt("DEFAULT_HEALTH", 100); } }
     public static int BuffHealth { get { return GetInt("BUFF_HEALTH", 10); } }
     public static float DistanceFac { get { return GetFloat("DISTANCE_FACTOR", 1); } }
     public static int ItemInterval { get { return GetInt("ITEM_INTERVAL", 5); } }
