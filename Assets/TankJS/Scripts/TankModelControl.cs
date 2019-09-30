@@ -38,7 +38,7 @@ public class TankModelControl : MonoBehaviour
                 return;
             }
             infoPanel.UpdateInfo(tankEntity.tankInformation.health, tankEntity.tankInformation.attack);
-            lerpT = Mathf.Min(Time.deltaTime / GameControl.instance.totalInterval * 1.5f, 1);
+            lerpT = Mathf.Min(Time.deltaTime / Configurations.RoundTime * 1.5f, 1);
             transform.position = Vector3.Lerp(transform.position, tankEntity.transform.position, lerpT * 0.8f);
             transform.rotation = Quaternion.Lerp(transform.rotation, tankEntity.transform.rotation, lerpT);
         }
