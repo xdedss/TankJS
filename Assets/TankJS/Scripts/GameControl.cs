@@ -6,8 +6,8 @@ public class GameControl : MonoBehaviour
 {
     public static GameControl instance;
 
-    public float RoundInterval { get { return tanks.Count == 0 ? totalInterval : totalInterval / tanks.Count; } }
-    public float totalInterval = 1f;//TODO: UI
+    public float RoundInterval { get { return tanks.Count == 0 ? Configurations.RoundTime : Configurations.RoundTime / tanks.Count; } }
+    //public float totalInterval = ;//TODO: UI
     //public int itemInterval = 5;
     //public int itemMaxCount = 5;
     [Space]
