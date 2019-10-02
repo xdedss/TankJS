@@ -50,7 +50,7 @@ class Configurations
     public static int ItemMaxCount { get { return GetInt("ITEM_MAX_COUNT", 5); } }
     public static int MapSizeX { get { return GetInt("MAP_SIZE_X", 12); } }
     public static int MapSizeZ { get { return GetInt("MAP_SIZE_Z", 24); } }
-    public static int ScriptTimeout { get { return GetInt("SCRIPT_TIMEOUT", 1000); } }
+    public static int ScriptTimeout { get { return GetInt("SCRIPT_TIMEOUT", 1500); } }
     public static float RoundTime { get { return GetFloat("ROUND_TIME", 1f); } }
 
 
