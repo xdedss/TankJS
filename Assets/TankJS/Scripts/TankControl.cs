@@ -70,31 +70,38 @@ public class TankControl : MonoBehaviour
         modelControl.Init();
     }
 
-    public void Round()
+    public IEnumerator Round()
     {
-        if (tankInformation.health <= 0) return;
-        visibleInfo.tanks.Clear();
-        visibleInfo.items.Clear();
-        foreach(var t in GameControl.instance.tanks)
+        if (tankInformation.health > 0)
         {
-            if (t.tankInformation.id != tankInformation.id)
+            visibleInfo.tanks.Clear();
+            visibleInfo.items.Clear();
+            foreach (var t in GameControl.instance.tanks)
             {
-                if (radarTime > 0 || t.tankInformation.faction == tankInformation.faction || CanSee(t))
+                if (t.tankInformation.id != tankInformation.id)
                 {
-                    visibleInfo.tanks.Add(t.tankInformation);
+                    if (radarTime > 0 || t.tankInformation.faction == tankInformation.faction || CanSee(t))
+                    {
+                        visibleInfo.tanks.Add(t.tankInformation);
+                    }
                 }
             }
-        }
-        foreach(var item in GameControl.instance.items)
-        {
-            if(CanSee(item.itemInformation.x, item.itemInformation.z))
+            foreach (var item in GameControl.instance.items)
             {
-                visibleInfo.items.Add(item.itemInformation);
+                if (CanSee(item.itemInformation.x, item.itemInformation.z))
+                {
+                    visibleInfo.items.Add(item.itemInformation);
+                }
             }
+            if (radarTime > 0) radarTime--;
+            //var action = bot.RequestAction(visibleInfo);
+            yield return bot.RequestActionAsync(visibleInfo);
+            ExecuteAction(bot.ActionResult);
         }
-        if(radarTime > 0) radarTime--;
-        var action = bot.RequestAction(visibleInfo);
-        ExecuteAction(action);
+        else
+        {
+            yield return 0;
+        }
     }
 
     public bool CanSee(TankControl t)

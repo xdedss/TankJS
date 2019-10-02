@@ -43,8 +43,25 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
-        
+        //StartCoroutine(co1());
     }
+
+    //IEnumerator co1()
+    //{
+        
+    //    Debug.Log("co1 1");
+    //    for(int i = 0; i < 100; i++)
+    //    {
+    //        yield return co2();
+    //    }
+    //    Debug.Log("co1 2");
+    //    Debug.Log("co1 3");
+    //}
+    //IEnumerator co2()
+    //{
+    //    //Debug.Log("co2 1");
+    //    yield return 0;
+    //}
     
     void Update()
     {
@@ -129,7 +146,7 @@ public class GameControl : MonoBehaviour
             }
             foreach(var t in tanks.ToArray())
             {
-                t.Round();
+                yield return t.Round();
                 yield return new WaitForSeconds(RoundInterval);
             }
         }

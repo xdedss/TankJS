@@ -39495,7 +39495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558fef984a0962349a20f55a73b010c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalInterval: 0.5
   tankPrefab: {fileID: 512846457}
   itemPrefab: {fileID: 111585434}
   mapRoot: {fileID: 1484483207}

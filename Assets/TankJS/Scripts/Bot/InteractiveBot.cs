@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,10 @@ class InteractiveBot : IBot
     KeyCode[] keys;
 
     public string Name { get => tankName + "-InteractiveBot-" + keys; set { tankName = value; } }
+
+    public int ActionResult { get; private set; }
+    public bool IsRunning => false;
+
     string tankName;
 
     public int RequestAction(GameInformation info)
@@ -47,5 +52,19 @@ class InteractiveBot : IBot
             }
         }
         return 0;
+    }
+
+    public IEnumerator RequestActionAsync(GameInformation info)
+    {
+        ActionResult = 0;
+        for (int i = 1; i < keys.Length; i++)
+        {
+            if (Input.GetKey(keys[i]))
+            {
+                ActionResult = i;
+                break;
+            }
+        }
+        yield return 0;
     }
 }

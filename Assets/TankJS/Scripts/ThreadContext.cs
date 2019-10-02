@@ -15,6 +15,9 @@ public class ThreadContext
     Exception evalException;
     bool evalSuccessful;
 
+    public delegate void JSCallback(JSValue result);
+    public delegate void JSErrorCallback(Exception exception);
+
     public ThreadContext(string scriptPath)
     {
         this.scriptPath = scriptPath;
@@ -85,5 +88,58 @@ public class ThreadContext
         {
             throw evalException;
         }
+    }
+
+    public void AsyncEval(string code, JSCallback callback, JSErrorCallback errorCallback)
+    {
+        var thread = new Thread(() => {
+            try
+            {
+                var res = ctx.Eval(code);
+                callback.Invoke(res);
+            }
+            catch (Exception ex)
+            {
+                errorCallback.Invoke(ex);
+            }
+        });
+        thread.Start();
+    }
+
+    public void AsyncTimedEval(string code, int milliTimeout, JSCallback callback, JSErrorCallback errorCallback)
+    {
+        var thread = new Thread(() => {
+            try
+            {
+                var res = ctx.Eval(code);
+                callback.Invoke(res);
+            }
+            catch (Exception ex)
+            {
+                if (!(ex is ThreadAbortException))
+                {
+                    errorCallback.Invoke(ex);
+                }
+            }
+        });
+        var timeThread = new Thread(() =>
+        {
+            try
+            {
+                Thread.Sleep(Configurations.ScriptTimeout);
+                if (thread.IsAlive)
+                {
+                    thread.Abort();
+                    errorCallback(new Exception("max time exceeded"));
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.LogWarning("This is impossible!");
+                Debug.LogError(ex);
+            }
+        });
+        thread.Start();
+        timeThread.Start();
     }
 }

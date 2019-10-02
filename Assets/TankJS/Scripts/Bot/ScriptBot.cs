@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System;
 using UnityEngine;
@@ -17,6 +17,12 @@ public class ScriptBot : IBot
     string jsName;
     string tankName;
     string logFileName = "";
+
+    public int ActionResult { get; private set; }
+    public bool IsRunning { get; private set; }
+
+
+    Stopwatch watch = new Stopwatch();
 
     public ScriptBot(string scriptPath)
     {
@@ -37,9 +43,13 @@ public class ScriptBot : IBot
         {
             threadContext.TimedEval(script, 2000);
         }
-        catch(Exception ex)
+        catch (JSException ex)
         {
             HandleJSError(ex);
+        }
+        catch (Exception ex)
+        {
+            HandleError(ex);
         }
 
     }
@@ -52,31 +62,75 @@ public class ScriptBot : IBot
             threadContext.ctx.Eval("info=" + ObjectToJson(info));
             var res = threadContext.TimedEval("update()", Configurations.ScriptTimeout);
             var action = res.As<int>();
-            Debug.Log(Name + " -> " + action);
+            UnityEngine.Debug.Log(Name + " -> " + action);
             return action;
+        }
+        catch (JSException ex)
+        {
+            HandleJSError(ex);
         }
         catch (Exception ex)
         {
-            HandleJSError(ex);
+            HandleError(ex);
         }
         return 0;
     }
 
-    private void HandleJSError(Exception ex)
+    public IEnumerator RequestActionAsync(GameInformation info)
     {
-        Debug.LogError(ex);
-        LogToFile("[ERROR]" + ex.Message);
+        IsRunning = true;
+        ActionResult = 0;
+        threadContext.ctx.Eval("info=" + ObjectToJson(info));
+        watch.Restart();
+        threadContext.AsyncTimedEval("update()", Configurations.ScriptTimeout, (res) => {
+            IsRunning = false;
+            watch.Stop();
+            try
+            {
+                ActionResult = res.As<int>();
+            }
+            catch(Exception ex)
+            {
+                HandleError(ex);
+            }
+        }, (err) => {
+            IsRunning = false;
+            watch.Stop();
+            if (err is JSException)
+                HandleJSError(err as JSException);
+            else
+                HandleError(err);
+        });
+        while (IsRunning)
+        {
+            yield return 0;
+        }
+        var time = Mathf.CeilToInt(1000f * watch.ElapsedTicks / (float)Stopwatch.Frequency);
+        UnityEngine.Debug.Log(string.Format("Async eval completed in {0} ms", time));
+        DebugMessage(string.Format("-------- {0} ms --------", time));
+    }
+
+
+    private void HandleJSError(JSException ex)
+    {
+        UnityEngine.Debug.LogError(ex);
+        LogToFile("[ERROR]" + ex.Message + ex.Error.GetProperty("stack"));
+    }
+    private void HandleError(Exception ex)
+    {
+        UnityEngine.Debug.LogError(ex);
+        LogToFile("[ERROR]" + ex.Message + ex.StackTrace);
     }
 
     private void DebugMessage(string msg)
     {
-        Debug.Log(Name + " : " + msg);
+        //Debug.Log(Name + " : " + msg);
         LogToFile(msg);
     }
 
     private void LogToFile(string msg)
     {
-        if (logFileName == "") logFileName = string.Format("{3}{0}_{1}_{2}.log", jsName, DateTime.Now.ToString("HHmmss"), tankName, Configurations.BotFolder);
+        if (logFileName == "") logFileName = string.Format("{3}{0}_{1}_{2}.log", jsName, DateTime.Now.ToString("MMdd_HHmmss"), tankName, Configurations.BotFolder);
         
         var sw = File.AppendText(logFileName);
         sw.WriteLine(DateTime.Now.ToString("[HH:mm:ss.fff]") + msg);
