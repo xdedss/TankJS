@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Spin : MonoBehaviour
 {
+    public Space space = Space.World;
+    public Vector3 axis = Vector3.up;
+    public float velocity = 1f;
 
     void Start()
     {
@@ -13,6 +16,6 @@ public class Spin : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(Vector3.up, Time.deltaTime * 60, Space.World);
+        transform.Rotate(axis, Time.deltaTime * 60 * velocity, space);
     }
 }

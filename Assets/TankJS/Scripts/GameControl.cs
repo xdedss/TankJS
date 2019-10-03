@@ -282,6 +282,7 @@ public class GameControl : MonoBehaviour
         var fail = 0;
         while (!CheckPath(0, 0, xWidth - 1, zWidth - 1) && fail < 10)
         {
+            useSeed = false;
             TerrainGen();
             fail++;
         }

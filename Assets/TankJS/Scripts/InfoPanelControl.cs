@@ -11,6 +11,8 @@ public class InfoPanelControl : MonoBehaviour
     public TextMesh nameText;
     public TextMesh infoText;
 
+    public GameObject runningMark;
+
     public void UpdateInfo(int hp, int attack)
     {
         infoText.text = string.Format("<color=#0f0>{0}</color> <color=#f80>{1}</color>", hp, attack);

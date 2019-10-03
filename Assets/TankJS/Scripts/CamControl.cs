@@ -22,7 +22,7 @@ public class CamControl : MonoBehaviour
             var euler = transform.eulerAngles;
             euler.x += Time.deltaTime * Input.GetAxis("Mouse Y") * rotationSpeed;
             euler.y += -Time.deltaTime * Input.GetAxis("Mouse X") * rotationSpeed;
-            euler.x = Mathf.Clamp(CenterAngle(euler.x, 0), 30, 90);
+            euler.x = Mathf.Clamp(CenterAngle(euler.x, 0), 0, 90);
             transform.eulerAngles = euler;
         }
         var forward = transform.forward;

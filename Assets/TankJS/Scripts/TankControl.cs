@@ -94,8 +94,10 @@ public class TankControl : MonoBehaviour
                 }
             }
             if (radarTime > 0) radarTime--;
+            modelControl.infoPanel.runningMark.SetActive(true);
             //var action = bot.RequestAction(visibleInfo);
             yield return bot.RequestActionAsync(visibleInfo);
+            modelControl.infoPanel.runningMark.SetActive(false);
             ExecuteAction(bot.ActionResult);
         }
         else
