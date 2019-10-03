@@ -6,7 +6,7 @@ using System.IO;
 
 class Configurations
 {
-    public const string AITNOWEU = "zimdakfjleslkahsdfakjd_ir8734afegra";//AnIdentifierThatNoOneWouldUse
+    public const string AITNOWEU = "zimdakfjleslkahsdfakjd_ir8734afegra";//AnIdentifierThatNoOneWouldEverUse
 
     public static string BotFolder
     {
