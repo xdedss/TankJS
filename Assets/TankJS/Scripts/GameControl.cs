@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using NiL.JS;
+using NiL.JS.Core;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +28,9 @@ public class GameControl : MonoBehaviour
 
     [Space]
     public Texture2D noise;
+    public int seedX;
+    public int seedZ;
+    public bool useSeed;
 
     private int currentId = 0;
     private int itemIntervalCount = 0;
@@ -43,7 +48,24 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
-        //StartCoroutine(co1());
+//        Context ctx = new Context();ctx.DebuggerCallback += (o, e) => { Debug.Log(e.Statement.Position + "," + e.Statement.EndPosition + "   " + e.Statement.ToString()); };ctx.Debugging = true;
+//        Script s = Script.Parse(@"
+//a = function(){
+//    console.log(no);
+//    return 233;
+//};
+//b = [1,2];");
+//        Script s2 = Script.Parse("something = a();");
+//        ctx.Eval(@"
+//a = function(){
+//    console.log(no);
+//    return 233;
+//};
+//b = [1,2];");
+//        //s.Evaluate(ctx);
+//        s2.Evaluate(ctx);
+//        Debug.Log(ctx.Eval("something"));
+//        //StartCoroutine(co1());
     }
 
     //IEnumerator co1()
@@ -337,6 +359,12 @@ public class GameControl : MonoBehaviour
         availableSpace.Clear();
         int startx = Mathf.FloorToInt(Random.value * 256);
         int startz = Mathf.FloorToInt(Random.value * 256);
+        if (useSeed)
+        {
+            startx = seedX;
+            startz = seedZ;
+        }
+        Debug.Log("seed:" + startx + "," + startz);
         int step = 3;
         float downLimit = 0.2f;
         float upLimit = 0.7f;

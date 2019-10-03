@@ -6,6 +6,7 @@ using System.IO;
 
 class Configurations
 {
+    public const string AITNOWEU = "zimdakfjleslkahsdfakjd_ir8734afegra";//AnIdentifierThatNoOneWouldUse
 
     public static string BotFolder
     {
@@ -50,9 +51,10 @@ class Configurations
     public static int ItemMaxCount { get { return GetInt("ITEM_MAX_COUNT", 5); } }
     public static int MapSizeX { get { return GetInt("MAP_SIZE_X", 12); } }
     public static int MapSizeZ { get { return GetInt("MAP_SIZE_Z", 24); } }
-    public static int ScriptTimeout { get { return GetInt("SCRIPT_TIMEOUT", 1500); } }
+    public static int ScriptTimeout { get { return GetInt("SCRIPT_TIMEOUT", 1500) * (Debugging ? 5 : 1); } }//longer when debugging
     public static float RoundTime { get { return GetFloat("ROUND_TIME", 1f); } }
-
+    public static bool Debugging { get { return Getbool("DEBUGGING", false); } }
+    public static int DebuggerLength { get { return GetInt("DEBUGGER_LENGTH", 10); } }
 
 
 

@@ -6,11 +6,14 @@ using UnityEngine;
 using NiL.JS.Core;
 using NiL.JS.Extensions;
 using System.Runtime.Serialization.Json;
+using NiL.JS;
+using System.Collections.Generic;
 
 public class ScriptBot : IBot
 {
 
     public string scriptPath;
+    string scriptStr;
     public ThreadContext threadContext;
 
     public string Name { get => tankName + "-" + jsName; set { tankName = value; } }
@@ -21,7 +24,7 @@ public class ScriptBot : IBot
     public int ActionResult { get; private set; }
     public bool IsRunning { get; private set; }
 
-
+    int[] linePositions;
     Stopwatch watch = new Stopwatch();
 
     public ScriptBot(string scriptPath)
@@ -30,26 +33,35 @@ public class ScriptBot : IBot
         var sp = scriptPath.Split('\\');
         jsName = sp[sp.Length - 1];
         threadContext = new ThreadContext(scriptPath);
+        //threadContext.ctx.Debugging = true;
+        threadContext.ctx.Debugging = Configurations.Debugging;
+        threadContext.debuggerLength = Configurations.DebuggerLength;
         threadContext.ctx.DefineConstructor(typeof(Vector2));
-        //threadContext.ctx.DefineConstructor(typeof(TankInformation));
-        //threadContext.ctx.DefineConstructor(typeof(ItemInformation));
-        //threadContext.ctx.DefineConstructor(typeof(GameInformation));
         threadContext.ctx.DefineVariable("log").Assign(JSValue.Marshal(new Action<string>(DebugMessage)));
         threadContext.ctx.DefineVariable("info");
 
-        var script = File.OpenText(scriptPath).ReadToEnd();
+        scriptStr = File.OpenText(scriptPath).ReadToEnd();
+        var lineList = new List<int>();
+        lineList.Add(-1);
+        for(int i = 0; i < scriptStr.Length; i++)
+        {
+            if (scriptStr[i] == '\n')
+            {
+                lineList.Add(i);
+            }
+        }
+        linePositions = lineList.ToArray();
 
         try
         {
-            threadContext.TimedEval(script, 2000);
-        }
-        catch (JSException ex)
-        {
-            HandleJSError(ex);
+            threadContext.TimedEval(scriptStr, 2000);
         }
         catch (Exception ex)
         {
-            HandleError(ex);
+            if (ex is JSException)
+                HandleJSError(ex as JSException);
+            else
+                HandleError(ex);
         }
 
     }
@@ -82,12 +94,13 @@ public class ScriptBot : IBot
         ActionResult = 0;
         threadContext.ctx.Eval("info=" + ObjectToJson(info));
         watch.Restart();
-        threadContext.AsyncTimedEval("update()", Configurations.ScriptTimeout, (res) => {
+        threadContext.AsyncTimedEval(Script.Parse(Configurations.AITNOWEU + " = update()"), Configurations.ScriptTimeout, () => {
             IsRunning = false;
             watch.Stop();
             try
             {
-                ActionResult = res.As<int>();
+                //ActionResult = res.As<int>();
+                ActionResult = threadContext.ctx.Eval(Configurations.AITNOWEU).As<int>();
             }
             catch(Exception ex)
             {
@@ -110,16 +123,49 @@ public class ScriptBot : IBot
         DebugMessage(string.Format("-------- {0} ms --------", time));
     }
 
-
     private void HandleJSError(JSException ex)
     {
         UnityEngine.Debug.LogError(ex);
-        LogToFile("[ERROR]" + ex.Message + ex.Error.GetProperty("stack"));
+        if (Configurations.Debugging)
+        {
+            string dump = FormatCodeInfo(threadContext.DumpMessage());
+            UnityEngine.Debug.Log(dump);
+            LogToFile("[JSERROR]" + (" Recent code:" + dump + '\n') + ex.Message);
+        }
+        else
+        {
+            LogToFile("[JSERROR]" + ex.Message);
+        }
     }
     private void HandleError(Exception ex)
     {
         UnityEngine.Debug.LogError(ex);
         LogToFile("[ERROR]" + ex.Message + ex.StackTrace);
+    }
+
+    private string FindCoordinate(int pos)
+    {
+        int line = -1, col = -1;
+        for(int i = 0; i < linePositions.Length; i++)
+        {
+            if(pos < linePositions[i])
+            {
+                line = i;
+                col = pos - linePositions[line - 1] - 1;
+                break;
+            }
+        }
+        return line + ":" + col;
+    }
+
+    private string FormatCodeInfo(ThreadContext.CodeInfo[] infos)
+    {
+        string res = "";
+        foreach(var info in infos)
+        {
+            res += string.Format("\n  ({0}~{1})    {2}", FindCoordinate(info.startPosition), FindCoordinate(info.endPosition), info.code);
+        }
+        return res;
     }
 
     private void DebugMessage(string msg)
