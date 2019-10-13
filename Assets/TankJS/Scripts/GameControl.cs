@@ -2,6 +2,7 @@
 using NiL.JS.Core;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameControl : MonoBehaviour
@@ -170,6 +171,10 @@ public class GameControl : MonoBehaviour
             {
                 yield return t.Round();
                 yield return new WaitForSeconds(RoundInterval);
+            }
+            if(Configurations.loop && tanks.Select(t => t.tankInformation.health > 0).ToList().Count <= 1)
+            {
+                Init();
             }
         }
     }

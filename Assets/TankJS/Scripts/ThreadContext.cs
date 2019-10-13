@@ -250,6 +250,7 @@ public class ThreadContext
                 if (thread.IsAlive)
                 {
                     thread.Abort();
+                    thread.Join();
                     errorCallback(new Exception("max time exceeded"));
                 }
             }
