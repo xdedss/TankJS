@@ -8,10 +8,10 @@ class NetworkBot : IBot
 
     public string url;
 
-    public string Name { get => tankName + "-NetworkBot@" + url; set { tankName = value; } }
+    public string Name { get { return tankName + "-NetworkBot@" + url; } set { tankName = value; } }
 
-    public int ActionResult => throw new NotImplementedException();
-    public bool IsRunning => throw new NotImplementedException();
+    public int ActionResult { get { throw new NotImplementedException(); } }
+    public bool IsRunning { get { throw new NotImplementedException(); } }
 
     string tankName;
 

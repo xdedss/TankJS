@@ -35,10 +35,10 @@ class InteractiveBot : IBot
     static KeyCode[] keysIJKL = new KeyCode[] { KeyCode.Space, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L, KeyCode.U, KeyCode.Alpha8 };
     KeyCode[] keys;
 
-    public string Name { get => tankName + "-InteractiveBot-" + keys; set { tankName = value; } }
+    public string Name { get { return tankName + "-InteractiveBot-" + keys; } set { tankName = value; } }
 
     public int ActionResult { get; private set; }
-    public bool IsRunning => false;
+    public bool IsRunning { get { return false; } }
 
     string tankName;
 

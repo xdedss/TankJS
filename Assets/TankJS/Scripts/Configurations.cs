@@ -56,7 +56,7 @@ class Configurations
     public static bool Debugging { get { return Getbool("DEBUGGING", false); } }
     public static int DebuggerLength { get { return GetInt("DEBUGGER_LENGTH", 10); } }
 
-    public static bool loop => false;
+    public static bool loop { get { return false; } }
 
 
     private static float GetFloat(string name, float defaultValue)

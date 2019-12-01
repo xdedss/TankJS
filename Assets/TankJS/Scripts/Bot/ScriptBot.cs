@@ -16,7 +16,7 @@ public class ScriptBot : IBot
     string scriptStr;
     public ThreadContext threadContext;
 
-    public string Name { get => tankName + "-" + jsName; set { tankName = value; } }
+    public string Name { get { return tankName + "-" + jsName; } set { tankName = value; } }
     string jsName;
     string tankName;
     string logFileName = "";
